@@ -12,9 +12,12 @@ import (
 
 func StartWebSocket() {
 	http.HandleFunc("/push", WsPush)
-	fmt.Println("WebSocket 启动程序成功","ip" , "6666")
+	fmt.Println("WebSocket 启动程序成功", "ip", "8888")
 
-	http.ListenAndServe(":"+"8888", nil)
+	err := http.ListenAndServe(":"+"8888", nil)
+	if err != nil {
+		fmt.Println("WebSocket 启动程序失败", "ip", "8888")
+	}
 }
 
 func WsPush(w http.ResponseWriter, req *http.Request) {
@@ -25,8 +28,12 @@ func WsPush(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
-	conn.WriteMessage(websocket.TextMessage,[]byte("hello"))
-
+	//初始化发送一个hello
+	err = conn.WriteMessage(websocket.TextMessage, []byte("hello"))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	for {
 		_, data, err := conn.ReadMessage()
 		if err != nil {
