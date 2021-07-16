@@ -28,12 +28,17 @@ func WsPush(w http.ResponseWriter, req *http.Request) {
 		http.NotFound(w, req)
 		return
 	}
+
+	client := NewClient(conn)
 	//初始化发送一个hello
-	err = conn.WriteMessage(websocket.TextMessage, []byte("hello"))
+	err = client.Socket.WriteMessage(websocket.TextMessage, []byte("hello"))
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	go client.Write("")
+	go client.Read()
+	/**
 	for {
 		_, data, err := conn.ReadMessage()
 		if err != nil {
@@ -46,6 +51,8 @@ func WsPush(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 	}
+
+	 */
 }
 
 /**
